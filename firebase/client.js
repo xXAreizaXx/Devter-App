@@ -1,4 +1,4 @@
-import firebase from "firebase"
+import firebase from "firebase";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCprzMoRksQDHZhLLJzMxL6dJKQ-JJkWOY",
@@ -7,29 +7,32 @@ const firebaseConfig = {
   storageBucket: "devter-5ed2d.appspot.com",
   messagingSenderId: "172932188425",
   appId: "1:172932188425:web:98cbdaa9482dbeb0ae6bd8",
-  measurementId: "G-FFKRLBDEY0"
-}
+  measurementId: "G-FFKRLBDEY0",
+};
 
-firebase.apps.length === 0 && firebase.initializeApp(firebaseConfig)
+firebase.apps.length === 0 && firebase.initializeApp(firebaseConfig);
 
 const mapUserFromFirebaseAuthToUser = (user) => {
-  const { displayName, photoURL, email } = user
+  const { displayName, photoURL, email } = user;
 
   return {
     avatar: photoURL,
     username: displayName,
-    email
-  }
-}
+    email,
+  };
+};
 
 export const onAuthStateChanged = (onChange) => {
-  firebase.auth().onAuthStateChanged(user => {
-    const normalizedUser = mapUserFromFirebaseAuthToUser(user)
-    onChange(normalizedUser)
-  })
-}
+  firebase.auth().onAuthStateChanged((user) => {
+    const normalizedUser = user ? mapUserFromFirebaseAuthToUser(user) : null;
+    onChange(normalizedUser);
+  });
+};
 
 export const loginWithGitHub = () => {
-  const githubProvider = new firebase.auth.GithubAuthProvider()
-  return firebase.auth().signInWithRedirect(githubProvider).then(mapUserFromFirebaseAuthToUser)
-}
+  const githubProvider = new firebase.auth.GithubAuthProvider();
+  return firebase
+    .auth()
+    .signInWithRedirect(githubProvider)
+    .then(mapUserFromFirebaseAuthToUser);
+};

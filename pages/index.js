@@ -1,29 +1,30 @@
-import { useState, useEffect } from 'react';
-import Head from 'next/head'
-import AppLyout from '../components/AppLyout'
-import Image from 'next/image'
-import Button from '../components/Button/index'
-import { colors } from '../styles/theme'
-import GitHub from '../components/Icons/GitHub'
-import { loginWithGitHub, onAuthStateChanged } from '../firebase/client'
+import { useState, useEffect } from "react";
+import Head from "next/head";
+import AppLyout from "@c/AppLyout";
+import Image from "next/image";
+import Button from "@c/Button";
+import { colors } from "styles/theme";
+import GitHub from "@c/Icons/GitHub";
+import { loginWithGitHub, onAuthStateChanged } from "firebase/client";
+import Avatar from "@c/Avatar";
 
 export default function Home() {
-  const [user, setUser] = useState(null)
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    onAuthStateChanged(setUser)
-  }, [])
+    onAuthStateChanged(setUser);
+  }, []);
 
   const handleClick = () => {
     loginWithGitHub()
-      .then(user => {
-        const { avatar, username, url } = user
-        setUser(user)
+      .then((user) => {
+        const { avatar, username, url } = user;
+        setUser(user);
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
-      })
-  }
+      });
+  };
 
   return (
     <div>
@@ -34,48 +35,56 @@ export default function Home() {
       </Head>
       <AppLyout>
         <section>
-          <Image src="/Logo.png" alt="Logo" width={'120px'} height={'120px'} />
+          <Image src="/Logo.png" alt="Logo" width={"120px"} height={"120px"} />
           <h1>DevTer</h1>
-          <h2>Talk about development <br /> whit developers 👨‍💻 👩‍💻</h2>
+          <h2>
+            Talk about development <br /> whit developers 👨‍💻 👩‍💻
+          </h2>
           <div>
-            {
-              user === null
-                ? <Button onClick={handleClick}><GitHub fill='#FFF' />Login with GitHub</Button>
-                : <div>
-                  <img src={user.avatar} alt="Avatar"/>
-                  <strong>{user.username}</strong>
-                </div>
-            }
+            {user === null ? (
+              <Button onClick={handleClick}>
+                <GitHub fill="#FFF" />
+                Login with GitHub
+              </Button>
+            ) : (
+              <div>
+                <Avatar
+                  alt={user.username}
+                  src={user.avatar}
+                  text={user.username}
+                />
+              </div>
+            )}
           </div>
         </section>
       </AppLyout>
 
-      <style jsx>{`
-        section {
-          display: grid;
-          height: 100%;
-          place-content: center;
-          place-items: center;
-        }
+      <style jsx>
+        {`
+          section {
+            display: grid;
+            height: 100%;
+            place-content: center;
+            place-items: center;
+          }
 
-        h1 {
-          color: ${colors.primary};
-          font-weight: 800;
-          margin-botton: 16px;
-        }
+          h1 {
+            color: ${colors.primary};
+            font-weight: 800;
+            margin-botton: 16px;
+          }
 
-        h2 {
-          color: ${colors.secundary};
-          font-size: 21px;
-          margin: 0;
-        }
+          h2 {
+            color: ${colors.secundary};
+            font-size: 21px;
+            margin: 0;
+          }
 
-        div {
-          margin-top: 10px;
-        }
-
-      `}
+          div {
+            margin-top: 10px;
+          }
+        `}
       </style>
     </div>
-  )
+  );
 }
