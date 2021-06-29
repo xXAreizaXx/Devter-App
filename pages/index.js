@@ -1,29 +1,26 @@
-import { useState, useEffect } from "react";
-import Head from "next/head";
-import AppLyout from "@c/AppLyout";
-import Image from "next/image";
-import Button from "@c/Button";
 import { colors } from "styles/theme";
+import { loginWithGitHub } from "firebase/client";
+import { useEffect } from "react";
+import { useRouter } from "next/router";
+import AppLyout from "@c/AppLyout";
+import Button from "@c/Button";
 import GitHub from "@c/Icons/GitHub";
-import { loginWithGitHub, onAuthStateChanged } from "firebase/client";
-import Avatar from "@c/Avatar";
+import Head from "next/head";
+import Image from "next/image";
+import useUser, { USER_STATES } from "hooks/useUser";
 
 export default function Home() {
-  const [user, setUser] = useState(null);
+  const user = useUser();
+  const router = useRouter();
 
   useEffect(() => {
-    onAuthStateChanged(setUser);
-  }, []);
+    user && router.replace("/Home");
+  }, [user, router]);
 
   const handleClick = () => {
-    loginWithGitHub()
-      .then((user) => {
-        const { avatar, username, url } = user;
-        setUser(user);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    loginWithGitHub().catch((err) => {
+      console.log(err);
+    });
   };
 
   return (
@@ -41,20 +38,13 @@ export default function Home() {
             Talk about development <br /> whit developers 👨‍💻 👩‍💻
           </h2>
           <div>
-            {user === null ? (
+            {user === USER_STATES.NOT_LOGGED && (
               <Button onClick={handleClick}>
-                <GitHub fill="#FFF" />
+                <GitHub fill="#fff" width={24} height={24} />
                 Login with GitHub
               </Button>
-            ) : (
-              <div>
-                <Avatar
-                  alt={user.username}
-                  src={user.avatar}
-                  text={user.username}
-                />
-              </div>
             )}
+            {user === USER_STATES.NOT_KNOWN && <span>Loading...</span>}
           </div>
         </section>
       </AppLyout>
