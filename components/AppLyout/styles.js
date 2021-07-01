@@ -33,6 +33,8 @@ export default css`
     background-color: #fff;
     border-radius: 10px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
     height: 90vh;
     overflow-y: auto;
     width: 450px;
