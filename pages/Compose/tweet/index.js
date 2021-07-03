@@ -1,7 +1,6 @@
 import { addDevit, uploadImage } from "firebase/client";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
-import AppLyout from "@c/AppLyout";
 import Avatar from "components/Avatar";
 import Button from "components/Button";
 import Head from "next/head";
@@ -94,37 +93,36 @@ export default function ComposeTweet() {
 
   return (
     <>
-      <AppLyout>
-        <Head>
-          <title>Crear un Devit / Devter</title>
-        </Head>
-        <section className="form-container">
-          {user && (
-            <section className="avatar-container">
-              <Avatar src={user.avatar} />
+      <Head>
+        <title>Crear un Devit / Devter</title>
+      </Head>
+      <section className="form-container">
+        {user && (
+          <section className="avatar-container">
+            <Avatar src={user.avatar} />
+          </section>
+        )}
+        <form onSubmit={handleSubmit}>
+          <textarea
+            onChange={handleChange}
+            onDragEnter={handleDragEnter}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+            placeholder="¿Qué esta pasando?"
+            value={message}
+          ></textarea>
+          {imgURL && (
+            <section className="remove-img">
+              <button onClick={() => setImgURL(null)}>x</button>
+              <img src={imgURL} alt="Imagen" />
             </section>
           )}
-          <form onSubmit={handleSubmit}>
-            <textarea
-              onChange={handleChange}
-              onDragEnter={handleDragEnter}
-              onDragLeave={handleDragLeave}
-              onDrop={handleDrop}
-              placeholder="¿Qué esta pasando?"
-              value={message}
-            ></textarea>
-            {imgURL && (
-              <section className="remove-img">
-                <button onClick={() => setImgURL(null)}>x</button>
-                <img src={imgURL} alt="Imagen" />
-              </section>
-            )}
-            <div>
-              <Button disabled={isButtonDisabled}>Devitear</Button>
-            </div>
-          </form>
-        </section>
-      </AppLyout>
+          <div>
+            <Button disabled={isButtonDisabled}>Devitear</Button>
+          </div>
+        </form>
+      </section>
+
       <style jsx>{`
         div {
           padding: 15px;
