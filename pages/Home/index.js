@@ -1,5 +1,5 @@
 import { colors } from "styles/theme";
-import { fetchLatestDevits } from "firebase/client";
+import { listenLatestDevits } from "firebase/client";
 import { useEffect, useState } from "react";
 import Create from "@c/Icons/Create";
 import Devit from "components/Devit";
@@ -14,7 +14,11 @@ export default function HomePage() {
   const user = useUser();
 
   useEffect(() => {
-    user && fetchLatestDevits().then(setTimeline);
+    let unsubscribe;
+    if (user) {
+      unsubscribe = listenLatestDevits(setTimeline);
+    }
+    return () => unsubscribe && unsubscribe();
   }, [user]);
 
   return (
